@@ -4,7 +4,9 @@ package de.neuefische.backend.controller;
 import de.neuefische.backend.model.ToDo;
 import de.neuefische.backend.service.KanbanService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class KanbanController {
     }
 
     @GetMapping("/todo/{id}")
-    public ToDo getToDo(@PathVariable String id){
+    public ToDo getToDo(@PathVariable String id) {
         return kanbanService.getToDo(id);
     }
 

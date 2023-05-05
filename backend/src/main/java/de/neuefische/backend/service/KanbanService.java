@@ -5,6 +5,8 @@ import de.neuefische.backend.repository.ToDoRepository;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.ErrorResponseException;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.*;
 import java.util.List;

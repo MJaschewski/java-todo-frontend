@@ -77,6 +77,15 @@ class KanbanControllerTest {
 
     @Test
     @DirtiesContext
+    void getToDo_whenWrongID_returnsStatus404() throws Exception{
+        //Given
+        String toDoId = "FalseID";
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/todo/"+toDoId))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
     void getToDo_returnsStatus200Ok_returnToDoWithRightID() throws Exception{
         //Given
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/todo")
@@ -136,7 +145,7 @@ class KanbanControllerTest {
 
     @Test
     @DirtiesContext
-    void removeToDo_returnStatus200Ok_returnRemovedToDo_andGetToDoRightID() throws Exception {
+    void removeToDo_returnStatus200Ok_returnRemovedToDo_andGetToDoRightID_returns404() throws Exception {
         //Given
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/todo")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -159,5 +168,17 @@ class KanbanControllerTest {
                                             {"description":"Hello World!","status":"OPEN"}
                                             """))
                 .andExpect(jsonPath("$.id").value(toDoId));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/todo/"+toDoId))
+                .andExpect(status().isNotFound());
     }
+    @Test
+    @DirtiesContext
+    void removeToDo_wrongID_returnStatus404() throws Exception {
+        //Given
+        String toDoId = "FalseId";
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/todo/"+toDoId))
+                .andExpect(status().isNotFound());
+    }
+
 }

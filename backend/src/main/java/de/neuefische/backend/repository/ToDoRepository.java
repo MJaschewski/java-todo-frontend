@@ -3,7 +3,11 @@ package de.neuefische.backend.repository;
 
 import de.neuefische.backend.model.ToDo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.ErrorResponseException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +31,14 @@ public class ToDoRepository {
     }
 
     public ToDo getToDo(String id) {
-        return toDoMap.get(id);
+        if(toDoMap.containsKey(id)){
+            return toDoMap.get(id);
+        }
+        else {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "No such ToDo found."
+            );
+        }
     }
 
     public ToDo editTodo(String id, ToDo toDo) {
