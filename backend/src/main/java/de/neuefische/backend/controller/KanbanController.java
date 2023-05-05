@@ -31,12 +31,15 @@ public class KanbanController {
     public ToDo getToDo(@PathVariable String id){
         return kanbanService.getToDo(id);
     }
+
     @PutMapping("/todo/{id}")
     public ToDo editToDo(@PathVariable String id,@RequestBody ToDo toDo){
         return kanbanService.editTodo(id,toDo);
     }
+
     @DeleteMapping("/todo/{id}")
     public ToDo removeToDo(@PathVariable String id){
         return kanbanService.removeToDo(id);
     }
+
 }

@@ -31,6 +31,7 @@ public class ToDoRepository {
     }
 
     public ToDo editTodo(String id, ToDo toDo) {
+        toDo.setId(id);
         toDoMap.replace(id,toDo);
         return toDoMap.get(id);
     }
