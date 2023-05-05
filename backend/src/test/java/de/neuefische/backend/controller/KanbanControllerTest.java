@@ -35,22 +35,6 @@ class KanbanControllerTest {
 
     @Test
     @DirtiesContext
-    void postToDo_returnsStatus200Ok_returnPostedToDo() throws Exception{
-        //Given
-        MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/todo")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"description":"Hello World!","status":"OPEN"}
-                                """))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(content().json("""
-                                {"description":"Hello World!","status":"OPEN"}
-                                """))
-                .andExpect(jsonPath("$.id").isNotEmpty()).andReturn();
-    }
-
-    @Test
-    @DirtiesContext
     void getToDos_returnStatus200Ok_returnsListWithToDos() throws Exception {
         //Given
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/todo")
@@ -74,6 +58,32 @@ class KanbanControllerTest {
 
 
     }
+
+    @Test
+    @DirtiesContext
+    void postToDo_returnsStatus200Ok_returnPostedToDo() throws Exception{
+        //Given
+        MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/todo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"description":"Hello World!","status":"OPEN"}
+                                """))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().json("""
+                                {"description":"Hello World!","status":"OPEN"}
+                                """))
+                .andExpect(jsonPath("$.id").isNotEmpty()).andReturn();
+    }
+
+    @Test
+    @DirtiesContext
+    void postToDoNoBody_returnStatus400() throws Exception {
+        //Given
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/todo"))
+                .andExpect(status().isBadRequest());
+    }
+
+
 
     @Test
     @DirtiesContext
@@ -114,7 +124,7 @@ class KanbanControllerTest {
 
     @Test
     @DirtiesContext
-    void editToDo_returnsStatus200Ok_returnsChangedToDo() throws Exception {
+    void editToDo_RightIdWithBody_returnsStatus200Ok_returnsChangedToDo() throws Exception {
         //Given
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/todo")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -141,6 +151,28 @@ class KanbanControllerTest {
                                                 {"description":"Hello World! World says No!","status":"OPEN"}
                                             """))
                 .andExpect(jsonPath("$.id").value(toDoId));
+    }
+
+    @Test
+    @DirtiesContext
+    void editToDo_wrongIDCorrectBody_returnStatus404() throws Exception {
+        //Given
+        String toDoId = "FalseId";
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/todo/"+toDoId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"description":"Hello World! World says No!","status":"OPEN"}
+                                """))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
+    void editToDo_rightIDNoBody_returnStatus400() throws Exception {
+        //Given
+        String toDoId = "FalseId";
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/todo/"+toDoId))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -180,5 +212,7 @@ class KanbanControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/todo/"+toDoId))
                 .andExpect(status().isNotFound());
     }
+
+
 
 }

@@ -42,9 +42,16 @@ public class ToDoRepository {
     }
 
     public ToDo editTodo(String id, ToDo toDo) {
-        toDo.setId(id);
-        toDoMap.replace(id,toDo);
-        return toDoMap.get(id);
+        if (toDoMap.containsKey(id)) {
+            toDo.setId(id);
+            toDoMap.replace(id,toDo);
+            return toDoMap.get(id);
+        }
+        else {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "No such ToDo found."
+            );
+        }
     }
 
     public ToDo removeToDo(String id) {
