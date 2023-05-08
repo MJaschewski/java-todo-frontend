@@ -2,6 +2,7 @@ package de.neuefische.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.neuefische.backend.model.ToDo;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -62,16 +64,16 @@ class KanbanControllerTest {
     @Test
     @DirtiesContext
     void postToDo_returnsStatus200Ok_returnPostedToDo() throws Exception{
+        //GIVEN
+        String requestBody = """
+                                {"description":"Hello World!","status":"OPEN"}
+                                """;
         //When & Then
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/todo")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"description":"Hello World!","status":"OPEN"}
-                                """))
+                        .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(content().json("""
-                                {"description":"Hello World!","status":"OPEN"}
-                                """))
+                .andExpect(content().json(requestBody))
                 .andExpect(jsonPath("$.id").isNotEmpty()).andReturn();
     }
 
@@ -81,6 +83,7 @@ class KanbanControllerTest {
         //When & Then
         mockMvc.perform(MockMvcRequestBuilders.post("/api/todo"))
                 .andExpect(status().isBadRequest());
+
     }
 
 
